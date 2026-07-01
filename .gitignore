@@ -1,0 +1,9 @@
+data/
+models/
+venv/
+.idea/
+.venv/
+env/
+*.pkl
+*.csv
+*.parquet
