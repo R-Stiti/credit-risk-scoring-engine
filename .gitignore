@@ -7,3 +7,5 @@ env/
 *.pkl
 *.csv
 *.parquet
+*.xls
+*.xlsx
