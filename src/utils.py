@@ -1,5 +1,6 @@
 import pandas as pd
 from sklearn.impute import SimpleImputer
+from sklearn.metrics import roc_auc_score
 
 
 def etude_sauts_quantiles(df, colonne):
@@ -51,3 +52,19 @@ def clean_credit_data(df, income_imputer:SimpleImputer, age_median):
     df = cap_outliers_explicit_value(df, "DebtRatio", 2.46)
 
     return df
+
+
+def evaluate_model_accuracy(model, X, y):
+
+    predictions = model.predict_proba(X)[:,1]
+    auc_roc = roc_auc_score(y, predictions)
+    gini = 2*auc_roc - 1
+
+    return auc_roc, gini
+
+def display_model_accuracy(auc_roc, gini):
+
+    print("Performances du modèle :", f"AUC-ROC : {auc_roc:.3f} \nGini : {gini:.3f} (Soit {gini*100:.2f}%)")
+
+    return None
+
