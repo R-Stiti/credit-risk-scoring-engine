@@ -104,7 +104,7 @@ def get_cleaner_pipeline() -> Pipeline:
         ('dependants', dependents_imputer, ['NumberOfDependents']),
         ('income', income_imputer, ['MonthlyIncome']),
         ('age', age_imputer, ["age"])
-        ], remainder='passthrough', verbose_feature_names_out=False)
+        ], remainder='passthrough', verbose_feature_names_out=False).set_output(transform='pandas')
 
     code_cols = [
     "NumberOfTime30-59DaysPastDueNotWorse",
@@ -132,5 +132,4 @@ def get_cleaner_pipeline() -> Pipeline:
         ('capper', quantile_capper)
     ])
 
-    pipeline.set_output(transform='pandas')
     return pipeline
