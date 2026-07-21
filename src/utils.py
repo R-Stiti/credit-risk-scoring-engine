@@ -1,6 +1,12 @@
 import pandas as pd
+from pandas import DataFrame, Series
+from sklearn.base import BaseEstimator
 from sklearn.impute import SimpleImputer
 from sklearn.metrics import roc_auc_score
+from sklearn.model_selection import cross_val_predict
+import os
+import joblib
+from sklearn.pipeline import Pipeline
 
 
 def etude_sauts_quantiles(df, colonne):
@@ -68,3 +74,23 @@ def display_model_accuracy(auc_roc, gini):
 
     return None
 
+def evaluate_model_oof(model: BaseEstimator, X:DataFrame, y:Series, cv):
+    oof_predictions = cross_val_predict(model, X, y, cv=cv, n_jobs=-1, method='predict_proba')[:,1]
+
+    auc_roc = roc_auc_score(y, oof_predictions)
+    gini = 2*auc_roc - 1
+
+    return auc_roc, gini, oof_predictions
+
+def save_pipeline(pipeline: Pipeline, filename: str, models_dir: str = "../models"):
+    os.makedirs(models_dir, exist_ok=True)
+    filepath = os.path.join(models_dir, filename)
+    joblib.dump(pipeline, filepath)
+    return filepath
+
+def load_pipeline(filename: str, models_dir: str = "../models"):
+    filepath = os.path.join(models_dir, filename)
+    if not os.path.exists(filepath):
+        raise FileNotFoundError(f"Modèle introuvable au chemin : {filepath}")
+    pipeline = joblib.load(filepath)
+    return pipeline
