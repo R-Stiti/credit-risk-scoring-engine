@@ -17,7 +17,6 @@ pipeline = load_model()
 preprocessor = pipeline.named_steps['preprocessor']
 xgb_model = pipeline.named_steps['simple_xgb']
 
-# --- Structure de l'application ---
 st.title("Moteur de Credit Scoring")
 st.markdown("Évaluation du risque de défaut de paiement à 2 ans via un modèle XGBoost optimisé.")
 
@@ -67,10 +66,8 @@ with tab1:
         else:
             st.success(f"Profil Solvable - Risque : {proba * 100:.1f}%")
 
-        # Explicabilité locale SHAP
         st.markdown("**Analyse des facteurs de décision (SHAP)**")
 
-        # Transformation des données pour SHAP
         client_transformed = preprocessor.transform(client_data)
         explainer = shap.TreeExplainer(xgb_model)
         shap_values = explainer.shap_values(client_transformed)
@@ -88,23 +85,44 @@ with tab1:
 
 
 with tab2:
-    st.markdown("**Importez un fichier de clients pour un audit de portefeuille.**")
-    uploaded_file = st.file_uploader("Fichier CSV", type="csv")
+    st.markdown("**Audit de portefeuille : importez un fichier ou testez avec nos données.**")
 
-    if uploaded_file is not None:
-        batch_data = pd.read_csv(uploaded_file, index_col=0)
-        st.write("Aperçu des données :", batch_data.head())
+    col_btn, col_upload = st.columns([1, 2])
+    with col_btn:
+        st.write("")
+        if st.button("Utiliser l'échantillon de test"):
+            st.session_state['batch_data'] = pd.read_csv("data/sample_clients.csv", index_col=0)
 
-        if st.button("Évaluer le portefeuille"):
+    with col_upload:
+        uploaded_file = st.file_uploader("Ou téléversez votre propre CSV", type="csv", label_visibility="collapsed")
+        if uploaded_file is not None:
+            st.session_state['batch_data'] = pd.read_csv(uploaded_file, index_col=0)
+
+    if 'batch_data' in st.session_state:
+        batch_data = st.session_state['batch_data']
+        st.write("Aperçu des données à évaluer :", batch_data.head())
+
+        if st.button("Évaluer le portefeuille", type="primary"):
             predictions = pipeline.predict_proba(batch_data)[:, 1]
-            batch_data['Probabilité_Defaut'] = predictions.round(4)
-            batch_data['Décision'] = np.where(predictions > 0.5, "Refusé", "Accepté")
 
-            st.write("Résultats de l'évaluation :", batch_data[['Probabilité_Defaut', 'Décision']].head(10))
+            results_df = batch_data.copy()
+            if 'SeriousDlqin2yrs' in results_df.columns:
+                results_df = results_df.drop(columns=['SeriousDlqin2yrs'])
+            results_df.index.name = "ID_Client"
 
-            csv_export = batch_data.to_csv().encode('utf-8')
-            st.download_button(label="Télécharger les résultats", data=csv_export, file_name="scoring_results.csv",
-                               mime="text/csv")
+            results_df['Probabilité_Défaut'] = (predictions * 100).round(2).astype(str) + '%'
+            results_df['Décision'] = np.where(predictions > 0.5, "Refusé", "Accepté")
+
+            colonnes_a_afficher = ['Probabilité_Défaut', 'Décision', 'age', 'MonthlyIncome', 'DebtRatio']
+            st.dataframe(results_df[colonnes_a_afficher], use_container_width=True)
+
+            csv_export = results_df.to_csv(index=True).encode('utf-8')
+            st.download_button(
+                label="Télécharger le rapport complet",
+                data=csv_export,
+                file_name="rapport_scoring.csv",
+                mime="text/csv"
+            )
 
 with tab3:
     st.markdown("**Validation du Modèle & Logique Métier**")
@@ -112,7 +130,6 @@ with tab3:
     col_k, col_s = st.columns(2)
     with col_k:
         st.info("**Performances Kaggle :** AUC 0.868 | Gini 73.30%")
-        # Remplace par le chemin exact de ton image
         try:
             st.image("images/kaggle_xgb_score.png", caption="Score Officiel sur Test Privé")
         except:
