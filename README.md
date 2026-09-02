@@ -4,7 +4,7 @@
 
 **1. Contexte du projet**
 
-Dans ce projet, l'objectif principal est de concevoir un algorithme capable d'évaluer la probabilité qu'un emprunteur se retrouve en situation de défaut de paiement dans un horizon de deux ans. Ce travail s'appuie sur le jeu de données issu de la compétition Kaggle [Give Me Some Credit de Kaggle](https://www.kaggle.com/competitions/GiveMeSomeCredit/data). Il convient non seulement de maximiser le pouvoir discriminant du modèle, mais également de garantir une transparence totale des décisions algorithmiques pour répondre aux exigences d'audit du secteur bancaire.
+Dans ce projet, l'objectif principal est de concevoir un algorithme capable d'évaluer la probabilité qu'un emprunteur se retrouve en situation de défaut de paiement dans un horizon de deux ans. Ce travail s'appuie sur le jeu de données issu de la compétition Kaggle [Give Me Some Credit](https://www.kaggle.com/competitions/GiveMeSomeCredit/data). Il convient non seulement de maximiser le pouvoir discriminant du modèle, mais également de garantir une transparence totale des décisions algorithmiques pour répondre aux exigences d'audit du secteur bancaire.
 
 **2. Architecture et Méthodologie**
 
