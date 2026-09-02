@@ -1,8 +1,10 @@
 # Moteur de Scoring de Crédit : Prédiction du Risque de Défaut
 
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://ton-url-app.streamlit.app)
+
 **1. Contexte du projet**
 
-Dans ce projet, l'objectif principal est de concevoir un algorithme capable d'évaluer la probabilité qu'un emprunteur se retrouve en situation de défaut de paiement dans un horizon de deux ans. Ce travail s'appuie sur le jeu de données issu de la compétition Kaggle "Give Me Some Credit". Il convient non seulement de maximiser le pouvoir discriminant du modèle, mais également de garantir une transparence totale des décisions algorithmiques pour répondre aux exigences d'audit du secteur bancaire.
+Dans ce projet, l'objectif principal est de concevoir un algorithme capable d'évaluer la probabilité qu'un emprunteur se retrouve en situation de défaut de paiement dans un horizon de deux ans. Ce travail s'appuie sur le jeu de données issu de la compétition Kaggle [Give Me Some Credit de Kaggle](https://www.kaggle.com/competitions/GiveMeSomeCredit/data). Il convient non seulement de maximiser le pouvoir discriminant du modèle, mais également de garantir une transparence totale des décisions algorithmiques pour répondre aux exigences d'audit du secteur bancaire.
 
 **2. Architecture et Méthodologie**
 
@@ -19,12 +21,20 @@ Le remplacement du modèle linéaire par notre architecture XGBoost optimisée a
 * Score AUC-ROC (Test Privé) : 0.868
 * Coefficient de Gini équivalent : 73.30%
 
+<p>
+  <img src="images/kaggle_xgb_score.png" alt="Score Kaggle XGBoost" width="700"/>
+</p>
+
 **4. Audit et Explicabilité (SHAP)**
 
 Afin de pallier le manque de transparence intrinsèque aux modèles d'arbres boostés, la méthode SHAP a été intégrée pour valider la cohérence financière des décisions prises par l'algorithme :
 
 * L'analyse globale démontre que l'utilisation excessive des lignes de crédit renouvelable et l'accumulation de retards de paiement (notamment au-delà de 90 jours) constituent logiquement les facteurs de risque dominants.
 * À l'inverse, l'âge avancé de l'emprunteur est correctement identifié par le modèle comme un signal de stabilité réduisant la probabilité de défaut.
+
+<p>
+  <img src="images/shap_summary_global.png" alt="SHAP Summary Plot" width="600"/>
+</p>
 
 **5. Déploiement de l'Interface**
 
