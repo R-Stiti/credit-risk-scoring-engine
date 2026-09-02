@@ -3,8 +3,6 @@ data/raw/*
 data/processed/*
 !data/processed/.gitkeep
 
-models/*
-!models/.gitkeep
 
 venv/
 .idea/
@@ -12,7 +10,6 @@ venv/
 env/
 
 *.pkl
-*.joblib
 *.csv
 *.parquet
 *.xls
