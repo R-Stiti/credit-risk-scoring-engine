@@ -1,6 +1,6 @@
 # Moteur de Scoring de Crédit : Prédiction du Risque de Défaut
 
-[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://ton-url-app.streamlit.app)
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://credit-risk-scoring-engine-qtyxtqdi64pkkbqp5kfbsh.streamlit.app/)
 
 **1. Contexte du projet**
 
