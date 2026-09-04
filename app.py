@@ -5,6 +5,19 @@ import joblib
 import shap
 import matplotlib.pyplot as plt
 
+MEDIANS = {
+    'age': 52,
+    'rev_util': 0.154,
+    'income': 5400.0,
+    'dependents': 0,
+    'debt_ratio': 0.366,
+    'open_lines': 8,
+    'real_estate': 1,
+    'late_30_59': 0,
+    'late_60_89': 0,
+    'late_90': 0
+}
+
 st.set_page_config(page_title="Credit Scoring Engine", layout="wide")
 
 
@@ -29,20 +42,20 @@ with tab1:
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        age = st.number_input("Âge", min_value=18, max_value=110, value=45)
-        rev_util = st.number_input("Taux d'utilisation du crédit renouvelable", min_value=0.0, value=0.3, format="%.3f")
-        income = st.number_input("Revenu mensuel (€)", min_value=0.0, value=5000.0)
-        dependents = st.number_input("Personnes à charge", min_value=0, max_value=20, value=1)
+        age = st.number_input("Âge", min_value=18, max_value=110, value=MEDIANS['age'])
+        rev_util = st.number_input("Taux d'utilisation du crédit renouvelable", min_value=0.0, value=MEDIANS['rev_util'], format="%.3f")
+        income = st.number_input("Revenu mensuel (€)", min_value=0.0, value=MEDIANS['income'])
+        dependents = st.number_input("Personnes à charge", min_value=0, max_value=20, value=MEDIANS['dependents'])
 
     with col2:
-        debt_ratio = st.number_input("Ratio d'endettement (DebtRatio)", min_value=0.0, value=0.35)
-        open_lines = st.number_input("Lignes de crédit ouvertes", min_value=0, max_value=60, value=5)
-        real_estate = st.number_input("Prêts immobiliers", min_value=0, max_value=30, value=1)
+        debt_ratio = st.number_input("Ratio d'endettement (DebtRatio)", min_value=0.0, value=MEDIANS['debt_ratio'])
+        open_lines = st.number_input("Lignes de crédit ouvertes", min_value=0, max_value=60, value=MEDIANS['open_lines'])
+        real_estate = st.number_input("Prêts immobiliers", min_value=0, max_value=30, value=MEDIANS['real_estate'])
 
     with col3:
-        late_30_59 = st.number_input("Retards 30-59 jours", min_value=0, max_value=98, value=0)
-        late_60_89 = st.number_input("Retards 60-89 jours", min_value=0, max_value=98, value=0)
-        late_90 = st.number_input("Retards +90 jours", min_value=0, max_value=98, value=0)
+        late_30_59 = st.number_input("Retards 30-59 jours", min_value=0, max_value=98, value=MEDIANS['late_30_59'])
+        late_60_89 = st.number_input("Retards 60-89 jours", min_value=0, max_value=98, value=MEDIANS['late_60_89'])
+        late_90 = st.number_input("Retards +90 jours", min_value=0, max_value=98, value=MEDIANS['late_90'])
 
     if st.button("Calculer le Risque", type="primary"):
         client_data = pd.DataFrame([{
@@ -94,7 +107,7 @@ with tab2:
             st.session_state['batch_data'] = pd.read_csv("data/sample_clients.csv", index_col=0)
 
     with col_upload:
-        uploaded_file = st.file_uploader("Ou téléversez votre propre CSV", type="csv", label_visibility="collapsed")
+        uploaded_file = st.file_uploader("Ou importez votre propre CSV", type="csv", label_visibility="collapsed")
         if uploaded_file is not None:
             st.session_state['batch_data'] = pd.read_csv(uploaded_file, index_col=0)
 
